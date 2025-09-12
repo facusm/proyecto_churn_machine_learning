@@ -1,0 +1,7 @@
+2025-09-12 08:54:46,026 - INFO - __main__ 27 - Inicio de ejecucion.
+2025-09-12 08:54:46,026 - INFO - __name__ 13 - Cargando dataset desde data/competencia_01.csv
+2025-09-12 08:54:55,150 - INFO - __name__ 16 - Dataset cargado con 978439 filas y 155 columnas
+2025-09-12 08:54:55,150 - INFO - __name__ 26 - Realizando feature engineering con 2 lags para 1 atributos
+2025-09-12 08:54:55,160 - DEBUG - __name__ 46 - Consulta SQL: SELECT *, lag(ctrx_quarter, 1) OVER (PARTITION BY numero_de_cliente ORDER BY foto_mes) AS ctrx_quarter_lag_1, lag(ctrx_quarter, 2) OVER (PARTITION BY numero_de_cliente ORDER BY foto_mes) AS ctrx_quarter_lag_2 FROM df
+2025-09-12 08:55:00,294 - INFO - __name__ 56 - Feature engineering completado. DataFrame resultante con 157 columnas
+2025-09-12 08:56:19,048 - INFO - __main__ 43 - >>> Ejecución finalizada. Revisar logs para mas detalles.log_2025-09-12_08-54-46.log

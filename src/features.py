@@ -32,13 +32,16 @@ def feature_engineering_lag(df: pd.DataFrame, columnas: list[str], cant_lag: int
     # Construir la consulta SQL
     sql = "SELECT *"
   
-    # Agregar los lags para los atributos especificados
+    # Agregar los lags para los atributos especificados. Si la columna ya existe, no se vuelve a generar.
     for attr in columnas:
         if attr in df.columns:
             for i in range(1, cant_lag + 1):
-                sql += f", lag({attr}, {i}) OVER (PARTITION BY numero_de_cliente ORDER BY foto_mes) AS {attr}_lag_{i}"
-        else:
-            logger.warning(f"El atributo {attr} no existe en el DataFrame")
+                col_name = f"{attr}_lag_{i}"
+                if col_name not in df.columns:
+                    sql += f", lag({attr}, {i}) OVER (PARTITION BY numero_de_cliente ORDER BY foto_mes) AS {col_name}"
+                else:
+                    logger.warning(f"La columna {col_name} ya existe, no se vuelve a generar")
+
   
     # Completar la consulta
     sql += " FROM df"

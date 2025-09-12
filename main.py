@@ -9,7 +9,7 @@ from src.features import feature_engineering_lag
 ## config basico logging
 os.makedirs("logs", exist_ok=True)
 
-fecha = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+fecha = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 monbre_log = f"log_{fecha}.log"
 logging.basicConfig(
     level=logging.DEBUG,
