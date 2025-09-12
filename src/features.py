@@ -61,6 +61,44 @@ def feature_engineering_lag(df: pd.DataFrame, columnas: list[str], cant_lag: int
     return df
 
 
+def feature_engineering_deltas(df: pd.DataFrame, columnas: list[str], cant_lag: int = 1) -> pd.DataFrame:
+    """
+    Genera columnas de delta (cambio respecto al lag) para las columnas especificadas.
+    Mantiene NaN si no hay información suficiente.
+    """
+    logger.info(f"Generando deltas para {len(columnas)} columnas con {cant_lag} lags")
+
+    for attr in columnas:
+        for i in range(1, cant_lag + 1):
+            lag_col = f"{attr}_lag_{i}"
+            delta_col = f"{attr}_delta_{i}"
+            if lag_col in df.columns and delta_col not in df.columns:
+                df[delta_col] = df[attr] - df[lag_col]
+            elif delta_col in df.columns:
+                logger.warning(f"{delta_col} ya existe, no se vuelve a generar")
+            else:
+                logger.warning(f"{lag_col} no existe, no se puede generar {delta_col}")
+
+    return df
+
+
+def feature_engineering_medias_moviles(df: pd.DataFrame, columnas: list[str], cant_lag: int = 1) -> pd.DataFrame:
+    """
+    Genera columnas de medias móviles incluyendo el valor actual y los lags.
+    Ignora automáticamente los NaN.
+    """
+    logger.info(f"Generando medias móviles para {len(columnas)} columnas con {cant_lag} lags")
+
+    for attr in columnas:
+        ma_cols = [attr] + [f"{attr}_lag_{i}" for i in range(1, cant_lag + 1) if f"{attr}_lag_{i}" in df.columns]
+        ma_col_name = f"{attr}_ma_{len(ma_cols)}"
+        if ma_col_name not in df.columns:
+            df[ma_col_name] = df[ma_cols].mean(axis=1)  # pandas ignora NaN automáticamente
+        else:
+            logger.warning(f"{ma_col_name} ya existe, no se vuelve a generar")
+    
+    return df
+
 
 
 def feature_engineering_min_max(

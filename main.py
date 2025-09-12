@@ -4,7 +4,7 @@ import datetime
 import logging
 
 from src.loader import cargar_datos
-from src.features import feature_engineering_lag
+from src.features import feature_engineering_lag, feature_engineering_min_max, feature_engineering_deltas, feature_engineering_medias_moviles
 
 ## config basico logging
 os.makedirs("logs", exist_ok=True)
@@ -32,9 +32,14 @@ def main():
     df = cargar_datos(path)   
 
     #01 Feature Engineering
-    atributos = ["ctrx_quarter"]
+    atributos_fe_lag = ["ctrx_quarter"] 
+    atributos_min_max = ["Master_mlimitecompra", "Visa_mlimitecompra"]
+
     cant_lag = 2
-    df = feature_engineering_lag(df, columnas=atributos, cant_lag=cant_lag)
+    df = feature_engineering_lag(df, columnas=atributos_fe_lag, cant_lag=cant_lag)
+    df = feature_engineering_deltas(df, columnas=atributos_fe_lag, cant_lag=cant_lag)
+    df = feature_engineering_medias_moviles(df, columnas=atributos_fe_lag, cant_lag=cant_lag)
+    df = feature_engineering_min_max(df, columnas=atributos_min_max)
   
     #02 Guardar datos
     path = "data/competencia_01_fe.csv"

@@ -1,0 +1,12 @@
+2025-09-12 11:02:30,596 - INFO - __main__ 27 - Inicio de ejecucion.
+2025-09-12 11:02:30,596 - INFO - __name__ 13 - Cargando dataset desde data/competencia_01.csv
+2025-09-12 11:02:40,186 - INFO - __name__ 16 - Dataset cargado con 978439 filas y 155 columnas
+2025-09-12 11:02:40,186 - INFO - __name__ 26 - Realizando feature engineering con 2 lags para 1 atributos
+2025-09-12 11:02:40,188 - DEBUG - __name__ 49 - Consulta SQL: SELECT *, lag(ctrx_quarter, 1) OVER (PARTITION BY numero_de_cliente ORDER BY foto_mes) AS ctrx_quarter_lag_1, lag(ctrx_quarter, 2) OVER (PARTITION BY numero_de_cliente ORDER BY foto_mes) AS ctrx_quarter_lag_2 FROM df
+2025-09-12 11:02:45,455 - INFO - __name__ 59 - Feature engineering completado. DataFrame resultante con 157 columnas
+2025-09-12 11:02:45,568 - INFO - __name__ 69 - Generando deltas para 1 columnas con 2 lags
+2025-09-12 11:02:45,582 - INFO - __name__ 90 - Generando medias móviles para 1 columnas con 2 lags
+2025-09-12 11:02:45,711 - INFO - __name__ 123 - Generando min y max para 2 atributos
+2025-09-12 11:02:45,711 - DEBUG - __name__ 151 - Consulta SQL: SELECT *, MIN(Master_mlimitecompra) OVER (PARTITION BY numero_de_cliente) AS Master_mlimitecompra_min, MAX(Master_mlimitecompra) OVER (PARTITION BY numero_de_cliente) AS Master_mlimitecompra_max, MIN(Visa_mlimitecompra) OVER (PARTITION BY numero_de_cliente) AS Visa_mlimitecompra_min, MAX(Visa_mlimitecompra) OVER (PARTITION BY numero_de_cliente) AS Visa_mlimitecompra_max FROM df
+2025-09-12 11:02:50,686 - INFO - __name__ 160 - Feature engineering completado. DataFrame resultante con 164 columnas
+2025-09-12 11:04:35,274 - INFO - __main__ 48 - >>> Ejecución finalizada. Revisar logs para mas detalles.log_2025-09-12_11-02-30.log
