@@ -4,7 +4,8 @@ import datetime
 import logging
 
 from src.loader import cargar_datos
-from src.features import feature_engineering_lag, feature_engineering_min_max, feature_engineering_deltas, feature_engineering_medias_moviles
+from src.features import feature_engineering_lag, feature_engineering_min_max, feature_engineering_deltas, feature_engineering_medias_moviles, feature_engineering_cum_sum,         feature_engineering_ratios
+
 
 ## config basico logging
 os.makedirs("logs", exist_ok=True)
@@ -33,13 +34,24 @@ def main():
 
     #01 Feature Engineering
     atributos_fe_lag = ["ctrx_quarter"] 
+    atributo_fe_deltas = ["ctrx_quarter"]
+    atributos_fe_medias_moviles = ["ctrx_quarter"]
+    atributos_cum_sum = ["Master_mlimitecompra", "Visa_mlimitecompra"]
     atributos_min_max = ["Master_mlimitecompra", "Visa_mlimitecompra"]
+    ratio_pairs = [
+    ("Master_msaldototal", "Master_ctrx"),
+    ("Visa_msaldototal", "Visa_ctrx"),
+    ("Master_msaldototal", "Visa_msaldototal")
+]
+    
 
     cant_lag = 2
     df = feature_engineering_lag(df, columnas=atributos_fe_lag, cant_lag=cant_lag)
-    df = feature_engineering_deltas(df, columnas=atributos_fe_lag, cant_lag=cant_lag)
-    df = feature_engineering_medias_moviles(df, columnas=atributos_fe_lag, cant_lag=cant_lag)
+    df = feature_engineering_deltas(df, columnas=atributo_fe_deltas, cant_lag=cant_lag)
+    df = feature_engineering_medias_moviles(df, columnas=atributos_fe_medias_moviles, cant_lag=cant_lag)
+    df = feature_engineering_cum_sum(df, columnas=atributos_cum_sum)
     df = feature_engineering_min_max(df, columnas=atributos_min_max)
+    df = feature_engineering_ratios(df, ratio_pairs=ratio_pairs)
   
     #02 Guardar datos
     path = "data/competencia_01_fe.csv"
