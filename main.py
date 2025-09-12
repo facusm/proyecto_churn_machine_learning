@@ -33,22 +33,69 @@ def main():
     df = cargar_datos(path)   
 
     #01 Feature Engineering
-    atributos_fe_lag = ["ctrx_quarter"] 
-    atributo_fe_deltas = ["ctrx_quarter"]
-    atributos_fe_medias_moviles = ["ctrx_quarter"]
-    atributos_cum_sum = ["Master_mlimitecompra", "Visa_mlimitecompra"]
-    atributos_min_max = ["Master_mlimitecompra", "Visa_mlimitecompra"]
+    atributos = [
+        "mrentabilidad",
+        "mcomisiones",
+        "mpasivos_margen",
+        "mcaja_ahorro",
+        "mcaja_ahorro_dolares",
+        "mcuentas_saldo",
+        "ctarjeta_debito_transacciones",
+        "mautoservicio",
+        "ctarjeta_visa_transacciones",
+        "mtarjeta_visa_consumo",
+        "ctarjeta_master_transacciones",
+        "mtarjeta_master_consumo",
+        "mprestamos_personales",
+        "mprestamos_prendarios",
+        "mprestamos_hipotecarios",
+        "mplazo_fijo_dolares",
+        "mplazo_fijo_pesos",
+        "cpayroll_trx",
+        "cpayroll2_trx",
+        "mcomisiones_mantenimiento",
+        "ctrx_quarter",
+        "Master_mlimitecompra",
+        "Master_mconsumototal",
+        "Visa_mlimitecompra",
+        "Visa_mconsumototal"
+    ]
+
+    atributos_fe_lag = atributos 
+    atributo_fe_deltas = atributos
+    atributos_fe_medias_moviles = atributos
+    atributos_cum_sum = atributos
+    atributos_min_max = atributos
+
     ratio_pairs = [
-    ("Master_msaldototal", "Master_ctrx"),
-    ("Visa_msaldototal", "Visa_ctrx"),
-    ("Master_msaldototal", "Visa_msaldototal")
-]
+        # Uso de tarjetas relativo al límite disponible
+        ("Master_mconsumototal", "Master_mlimitecompra"),
+        ("Visa_mconsumototal", "Visa_mlimitecompra"),
+
+        # Consumo mensual relativo al límite
+        ("mtarjeta_master_consumo", "Master_mlimitecompra"),
+        ("mtarjeta_visa_consumo", "Visa_mlimitecompra"),
+
+        # Préstamos en relación al saldo de cuentas
+        ("mprestamos_personales", "mcuentas_saldo"),
+        ("mprestamos_prendarios", "mcuentas_saldo"),
+        ("mprestamos_hipotecarios", "mcuentas_saldo"),
+
+        # Ahorros relativos al saldo total
+        ("mcaja_ahorro", "mcuentas_saldo"),
+        ("mcaja_ahorro_dolares", "mcuentas_saldo"),
+
+        # Comisiones en relación a la rentabilidad
+        ("mcomisiones", "mrentabilidad")
+    ]
+
     
 
     cant_lag = 2
+    window_size = 3
     df = feature_engineering_lag(df, columnas=atributos_fe_lag, cant_lag=cant_lag)
     df = feature_engineering_deltas(df, columnas=atributo_fe_deltas, cant_lag=cant_lag)
-    df = feature_engineering_medias_moviles(df, columnas=atributos_fe_medias_moviles, cant_lag=cant_lag)
+    df = feature_engineering_medias_moviles(df, columnas=atributos_fe_medias_moviles, window_size=window_size)
     df = feature_engineering_cum_sum(df, columnas=atributos_cum_sum)
     df = feature_engineering_min_max(df, columnas=atributos_min_max)
     df = feature_engineering_ratios(df, ratio_pairs=ratio_pairs)
