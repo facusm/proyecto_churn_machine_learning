@@ -37,7 +37,7 @@ def main():
     df = feature_engineering_lag(df, columnas=atributos, cant_lag=cant_lag)
   
     #02 Guardar datos
-    path = "data/competencia_01_lag.csv"
+    path = "data/competencia_01_fe.csv"
     df.to_csv(path, index=False)
   
     logger.info(f">>> Ejecución finalizada. Revisar logs para mas detalles.{monbre_log}")
